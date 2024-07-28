@@ -1,5 +1,5 @@
 {
-  "name": "ffsoft-foss/tron-sdk",
+  "name": "shaksi/tron-sdk",
   "description": "A PHP API for interacting with Tron (Trx)",
   "license": "MIT",
   "type": "library",
