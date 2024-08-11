@@ -994,6 +994,43 @@ class Tron implements TronInterface
         return array_merge($response, $signedTransaction);
     }
 
+    public function UndelegateResource(string $owner_address = null, string $resource = 'BANDWIDTH', string $receiver_address = null,int $balance = 0, bool $visible = true): array
+    {
+        if($owner_address == null) {
+            $owner_address = $this->address['hex'];
+        }
+
+        $undelegate = $this->transactionBuilder->UndelegateResource($owner_address, $resource, $receiver_address, $balance);
+        $signedTransaction = $this->signTransaction($undelegate);
+        $response = $this->sendRawTransaction($signedTransaction);
+
+        return array_merge($response, $signedTransaction);
+    }
+ 
+ /**
+     * Query bandwidth information.
+     *
+     * @param $address
+     * @return array
+     * @throws TronException
+     */
+    public function getdelegatedresourcev2(string $to,string $from=null)
+    {
+        $from = (!is_null($from) ? $this->toHex($from) : $this->address['hex']);
+        $to = $this->toHex($to);
+        return $this->manager->request('wallet/getdelegatedresourcev2', [
+            'fromAddress'   =>  $from,
+            'toAddress'=>$to
+        ]);
+    }
+    public function getdelegatedresourceaccountindexv2(string $from=null)
+    {
+        $from = (!is_null($from) ? $this->toHex($from) : $this->address['hex']);
+        return $this->manager->request('wallet/getdelegatedresourceaccountindexv2', [
+            'value'   =>  $from,
+        ]);
+    }
+
     /**
      * Unfreeze TRX that has passed the minimum freeze duration.
      * Unfreezing will remove bandwidth and TRON Power.

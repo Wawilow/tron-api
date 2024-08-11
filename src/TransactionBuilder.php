@@ -324,6 +324,30 @@ class TransactionBuilder
         );
     }
 
+    public function undelegateResource(string $owner_address = null, string $resource = 'BANDWIDTH', string $receiver_address = null,int $balance = 0)
+    {
+        if(empty($owner_address) or empty($receiver_address)) {
+            throw new TronException('Address not specified');
+        }
+        if (!in_array($resource, ['BANDWIDTH', 'ENERGY'])) {
+            throw new TronException('Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"');
+        }
+        if (!is_int($balance)) {
+            throw new TronException('Invalid balance');
+        }
+
+
+        return $this->tron->getManager()->request(
+            'wallet/undelegateresource',
+            [
+            'owner_address' => $this->tron->address2HexString($owner_address),
+            'resource' => $resource,
+            'receiver_address' => $this->tron->address2HexString($receiver_address),
+            'balance' => $this->tron->toTron($balance),
+            ],
+        );
+    }
+
     /**
      * Unfreeze TRX that has passed the minimum freeze duration.
      * Unfreezing will remove bandwidth and TRON Power.
